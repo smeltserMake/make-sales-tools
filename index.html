@@ -322,6 +322,9 @@
                     headers:{'Content-Type':'application/json'},
                     body:JSON.stringify(payload)
                 }).then(function(response){
+                    if(!response.ok){
+                        throw new Error('HTTP '+response.status+': '+response.statusText);
+                    }
                     return response.text();
                 }).then(function(data){
                     var popup=document.createElement('div');

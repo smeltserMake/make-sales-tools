@@ -311,36 +311,7 @@
     </div>
     
     <script>
-        const bookmarkletCode = `javascript:(function(){
-            var url=window.location.href;
-            var match=url.match(/\\/lightning\\/r\\/Opportunity\\/([a-zA-Z0-9]{15,18})\\/view/);
-            if(match){
-                var oppId=match[1];
-                var payload={opportunityId:oppId,sourceUrl:url,timestamp:new Date().toISOString()};
-                fetch('https://54jsznj7h4.execute-api.us-east-2.amazonaws.com/prod/webhook',{
-                    method:'POST',
-                    headers:{'Content-Type':'application/json'},
-                    body:JSON.stringify(payload)
-                }).then(function(response){
-                    if(!response.ok){
-                        throw new Error('HTTP '+response.status+': '+response.statusText);
-                    }
-                    return response.text();
-                }).then(function(data){
-                    var popup=document.createElement('div');
-                    popup.style.cssText='position:fixed;top:20px;right:20px;width:400px;max-height:500px;background:white;border:2px solid #4a90e2;border-radius:8px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:10000;font-family:monospace;font-size:12px;overflow-y:auto;color:black;';
-                    var isJSON=false;
-                    try{var parsed=JSON.parse(data);data=JSON.stringify(parsed,null,2);isJSON=true;}catch(e){}
-                    popup.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;font-family:sans-serif;"><strong>🎯 Webhook Response</strong><button onclick="this.parentElement.parentElement.remove()" style="background:#ff4444;color:white;border:none;border-radius:4px;padding:5px 10px;cursor:pointer;">✕</button></div><div style="background:#f5f5f5;padding:10px;border-radius:4px;white-space:pre-wrap;word-wrap:break-word;">'+data+'</div><div style="margin-top:10px;font-family:sans-serif;font-size:11px;color:#666;">Opportunity ID: '+oppId+'</div>';
-                    document.body.appendChild(popup);
-                    setTimeout(function(){if(document.body.contains(popup))popup.remove();},30000);
-                }).catch(function(error){
-                    alert('❌ Error: '+error.message);
-                });
-            }else{
-                alert('❌ No Salesforce Opportunity ID found in current URL');
-            }
-        })()`;
+        const bookmarkletCode = `javascript:(function(){var url=window.location.href;var match=url.match(/\\/lightning\\/r\\/Opportunity\\/([a-zA-Z0-9]{15,18})\\/view/);if(match){var oppId=match[1];var payload={opportunityId:oppId,sourceUrl:url,timestamp:new Date().toISOString()};fetch('https://54jsznj7h4.execute-api.us-east-2.amazonaws.com/prod/webhook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(function(response){if(!response.ok){throw new Error('HTTP '+response.status+': '+response.statusText);}return response.text();}).then(function(data){var popup=document.createElement('div');popup.style.cssText='position:fixed;top:20px;right:20px;width:400px;max-height:500px;background:white;border:2px solid #4a90e2;border-radius:8px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:10000;font-family:monospace;font-size:12px;overflow-y:auto;color:black;';var closeBtn=document.createElement('button');closeBtn.innerHTML='✕';closeBtn.style.cssText='position:absolute;top:10px;right:10px;background:#ff4444;color:white;border:none;border-radius:4px;padding:5px 10px;cursor:pointer;';closeBtn.onclick=function(){popup.remove();};var content=document.createElement('div');content.innerHTML='<strong>🎯 Webhook Response</strong><br><br><pre style=\"background:#f5f5f5;padding:10px;border-radius:4px;white-space:pre-wrap;word-wrap:break-word;\">'+data+'</pre><br><small>Opportunity ID: '+oppId+'</small>';popup.appendChild(closeBtn);popup.appendChild(content);document.body.appendChild(popup);setTimeout(function(){if(document.body.contains(popup))popup.remove();},30000);}).catch(function(error){alert('❌ Error: '+error.message);});}else{alert('❌ No Salesforce Opportunity ID found in current URL');}})();`;
         
         function createBookmarklet() {
             const link = document.createElement('a');

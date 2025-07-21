@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Tools Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a1a1a;
+            background: #fafafa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 700px;
+            width: 90%;
+            padding: 60px 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 48px;
+            font-weight: 400;
+        }
+        
+        .tools-section {
+            margin-bottom: 48px;
+        }
+        
+        .tools-grid {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .tool-card {
+            position: relative;
+            width: 220px;
+            flex-shrink: 0;
+        }
+        
+        .tool-item {
+            display: block;
+            background: white;
+            color: #333;
+            padding: 24px 20px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            cursor: grab;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5e9;
+        }
+        
+        .tool-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            border-color: #0066cc;
+        }
+        
+        .tool-item:active {
+            cursor: grabbing;
+        }
+        
+        .tool-item.coming-soon {
+            background: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .tool-item.coming-soon:hover {
+            transform: none;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border-color: #e1e5e9;
+        }
+        
+        .tool-description {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 10;
+        }
+        
+        .tool-description::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 4px solid #333;
+        }
+        
+        .tool-card:hover .tool-description {
+            opacity: 1;
+        }
+        
+        .how-to {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+        
+        .how-to h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+        
+        .steps {
+            list-style: none;
+        }
+        
+        .steps li {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 15px;
+            color: #444;
+        }
+        
+        .steps li:last-child {
+            border-bottom: none;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #0066cc;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+        
+        .details-toggle {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 12px 24px;
+            border-radius: 6px;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .details-toggle:hover {
+            border-color: #0066cc;
+            color: #0066cc;
+        }
+        
+        .details {
+            display: none;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid #f0f0f0;
+            text-align: left;
+        }
+        
+        .details.visible {
+            display: block;
+        }
+        
+        .details h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 24px 0 12px 0;
+            color: #1a1a1a;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 13px;
+            color: #495057;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .feature-list li::before {
+            content: "•";
+            color: #0066cc;
+            font-weight: bold;
+            display: inline-block;
+            width: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Make Sales Tools</h1>
+        <p class="subtitle">Drag & Drop Tools for the Make Sales Team</p>
+        
+        <div class="tools-section">
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <a href="javascript:void(0)" onclick="return false;" class="tool-item" draggable="true" oncontextmenu="showCode(); return false;">
+                        🎯 MSP Generator
+                    </a>
+                    <div class="tool-description">Generate MSPs from a Salesforce opportunity page</div>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-item coming-soon">
+                        🎬 Run Demo Scenario
+                    </div>
+                    <div class="tool-description">Coming soon: Run scenarios in the Make demo playground during your discovery calls</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="how-to">
+            <h2>How to use</h2>
+            <ol class="steps">
+                <li><span class="step-number">1</span>Drag the tool above to your bookmarks bar</li>
+                <li><span class="step-number">2</span>Go to the page relevant to the tool you'd like to use</li>
+                <li><span class="step-number">3</span>Click the bookmark to trigger your automation</li>
+                <li><span class="step-number">4</span>See the response in a popup window</li>
+            </ol>
+        </div>
+        
+        <button class="details-toggle" onclick="toggleDetails()">
+            Technical Details
+        </button>
+        
+        <div class="details" id="details">
+            <h3>What it sends</h3>
+            <div class="code-block">{
+  "opportunityId": "006S700000FIMsgIAH",
+  "sourceUrl": "https://celonis.lightning.force.com/lightning/r/Opportunity/006S700000FIMsgIAH/view",
+  "timestamp": "2025-07-02T15:30:00.000Z"
+}</div>
+            
+            <h3>Features</h3>
+            <ul class="feature-list">
+                <li>Automatically extracts Opportunity IDs from URLs</li>
+                <li>Routes through AWS API Gateway for Salesforce CSP compliance</li>
+                <li>Shows formatted JSON responses in a popup</li>
+                <li>Auto-closes after 30 seconds</li>
+                <li>Works on any Salesforce org</li>
+            </ul>
+            
+            <h3>Security Features</h3>
+            <ul class="feature-list">
+                <li>Uses AWS API Gateway as secure proxy</li>
+                <li>API credentials managed server-side in AWS Lambda</li>
+                <li>Complies with Salesforce Content Security Policy</li>
+                <li>All requests use HTTPS encryption</li>
+            </ul>
+            
+            <h3>Architecture</h3>
+            <div class="code-block">Salesforce → AWS API Gateway → AWS Lambda → Make.com Webhook</div>
+        </div>
+    </div>
+    
+    <script>
+        const bookmarkletCode = `javascript:(function(){console.log('🚀 Starting enhanced bookmarklet...');function showNotification(title,message,type='info'){console.log('📢 Showing notification:',title,message);const existingPopup=document.getElementById('make-notification-popup');if(existingPopup)existingPopup.remove();const popup=document.createElement('div');popup.id='make-notification-popup';popup.style.cssText='position:fixed;top:20px;right:20px;width:400px;max-height:600px;background:white;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.15);z-index:999999;font-family:-apple-system,BlinkMacSystemFont,\"Segoe UI\",sans-serif;animation:slideIn 0.3s ease-out;overflow:hidden;';const style=document.createElement('style');style.textContent='@keyframes slideIn{from{transform:translateX(400px);opacity:0;}to{transform:translateX(0);opacity:1;}}';document.head.appendChild(style);const header=document.createElement('div');header.style.cssText='background:'+(type==='error'?'#ff4444':type==='success'?'#00c853':'#0066cc')+';color:white;padding:16px 20px;font-weight:600;font-size:16px;display:flex;justify-content:space-between;align-items:center;';const closeBtn=document.createElement('button');closeBtn.innerHTML='×';closeBtn.style.cssText='background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0;';closeBtn.onclick=function(){popup.remove();};const titleSpan=document.createElement('span');titleSpan.textContent=title;header.appendChild(titleSpan);header.appendChild(closeBtn);const content=document.createElement('div');content.style.cssText='padding:20px;color:#333;font-size:14px;max-height:500px;overflow-y:auto;';content.innerHTML=message;const footer=document.createElement('div');footer.style.cssText='padding:12px 20px;background:#f5f5f5;border-top:1px solid #e0e0e0;font-size:12px;color:#666;';footer.innerHTML='Auto-closing in <span id=\"countdown\">30</span> seconds';popup.appendChild(header);popup.appendChild(content);popup.appendChild(footer);document.body.appendChild(popup);let countdown=30;const countdownEl=document.getElementById('countdown');const timer=setInterval(()=>{countdown--;if(countdownEl)countdownEl.textContent=countdown;if(countdown<=0){clearInterval(timer);if(document.body.contains(popup))popup.remove();}},1000);}const url=window.location.href;console.log('📍 Current URL:',url);const match=url.match(/\\/lightning\\/r\\/Opportunity\\/([a-zA-Z0-9]{15,18})\\/view/);if(!match){showNotification('❌ Wrong Page','Please navigate to a Salesforce Opportunity page first.<br><br>Expected URL pattern:<br><code>/lightning/r/Opportunity/[ID]/view</code>','error');return;}const oppId=match[1];const payload={opportunityId:oppId,sourceUrl:url,timestamp:new Date().toISOString()};console.log('✅ Opportunity ID found:',oppId);console.log('📦 Payload:',payload);showNotification('⏳ Processing...','Sending Opportunity ID: <strong>'+oppId+'</strong><br><br>Please wait...','info');fetch('https://54jsznj7h4.execute-api.us-east-2.amazonaws.com/prod/webhook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).then(response=>{console.log('📡 Response received:',response.status,response.statusText);return response.text().then(text=>({status:response.status,statusText:response.statusText,text:text}));}).then(result=>{console.log('📥 Response data:',result.text);try{const data=JSON.parse(result.text);if(data.success&&data.makeComResponse&&data.makeComResponse.status===200){let responseBody=data.makeComResponse.body||'Accepted';if(typeof responseBody==='string'){try{const parsedBody=JSON.parse(responseBody);if(parsedBody.message){responseBody=parsedBody.message;}}catch(e){}}else if(responseBody.message){responseBody=responseBody.message;}if(typeof responseBody==='string'&&responseBody.includes('Success!')){const messageMatch=responseBody.match(/"message":\s*"([^"]+)"/);if(messageMatch){responseBody=messageMatch[1];}}showNotification('✅ Success!',responseBody,'success');}else{showNotification('⚠️ Partial Success','<strong>Response:</strong><br><pre style=\"background:#f5f5f5;padding:8px;border-radius:4px;font-size:11px;overflow-x:auto;\">'+JSON.stringify(data,null,2)+'</pre>','info');}}catch(e){showNotification('✅ Request Sent','<strong>Opportunity ID:</strong> '+oppId+'<br><br><strong>Response:</strong><br><div style=\"background:#f5f5f5;padding:12px;border-radius:6px;margin-top:8px;\">'+result.text+'</div>','success');}}).catch(error=>{console.error('❌ Error:',error);showNotification('❌ Error','<strong>Failed to send request</strong><br><br><strong>Error:</strong> '+error.message+'<br><br><strong>Details:</strong><br>Check the browser console for more information.','error');});})();`;
+        
+        function createBookmarklet() {
+            const link = document.createElement('a');
+            link.href = bookmarkletCode;
+            link.innerHTML = '🎯 MSP Generator';
+            link.className = 'tool-item';
+            link.draggable = true;
+            link.oncontextmenu = function() { showCode(); return false; };
+            link.onclick = function() { return false; };
+            
+            const oldButton = document.querySelector('.tool-card .tool-item:not(.coming-soon)');
+            
+            if (oldButton) {
+                oldButton.parentNode.replaceChild(link, oldButton);
+            }
+        }
+        
+        function showCode() {
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
+            
+            const content = document.createElement('div');
+            content.style.cssText = 'background:white;padding:24px;border-radius:8px;max-width:90%;max-height:80%;overflow:auto;';
+            
+            const heading = document.createElement('h3');
+            heading.textContent = 'Bookmarklet Code';
+            heading.style.cssText = 'margin:0 0 16px 0;';
+            
+            const description = document.createElement('p');
+            description.textContent = 'Copy this code and create a bookmark manually:';
+            description.style.cssText = 'margin:0 0 16px 0;color:#666;';
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = bookmarkletCode;
+            textarea.readOnly = true;
+            textarea.style.cssText = 'width:100%;height:200px;font-family:monospace;font-size:12px;padding:8px;border:1px solid #ddd;border-radius:4px;';
+            
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.cssText = 'margin-top:16px;text-align:right;';
+            
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'Close';
+            closeButton.style.cssText = 'background:#0066cc;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;';
+            closeButton.onclick = function() {
+                modal.remove();
+            };
+            
+            buttonContainer.appendChild(closeButton);
+            content.appendChild(heading);
+            content.appendChild(description);
+            content.appendChild(textarea);
+            content.appendChild(buttonContainer);
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            textarea.select();
+        }
+        
+        window.toggleDetails = function() {
+            const details = document.getElementById('details');
+            const button = document.querySelector('.details-toggle');
+            
+            if (details.classList.contains('visible')) {
+                details.classList.remove('visible');
+                button.textContent = 'Technical Details';
+            } else {
+                details.classList.add('visible');
+                button.textContent = 'Hide Details';
+            }
+        };
+        
+        window.showCode = showCode;
+        
+        document.addEventListener('DOMContentLoaded', createBookmarklet);
+    </script>
+</body>
+</html>
